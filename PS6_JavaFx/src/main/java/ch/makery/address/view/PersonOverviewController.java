@@ -12,6 +12,7 @@ import java.util.UUID;
 import base.PersonDAL;
 import ch.makery.address.MainApp;
 import ch.makery.address.model.Person;
+import domain.PersonDomainModel;
 
 
 public class PersonOverviewController {
@@ -52,8 +53,8 @@ public class PersonOverviewController {
     @FXML
     private void initialize() {
         // Initialize the person table with the two columns.
-        firstNameColumn.setCellValueFactory(cellData -> cellData.getValue().firstNameProperty());
-        lastNameColumn.setCellValueFactory(cellData -> cellData.getValue().lastNameProperty());
+        firstNameColumn.setCellValueFactory(cellData -> cellData.getValue().getFirstNameProperty());
+        lastNameColumn.setCellValueFactory(cellData -> cellData.getValue().getLastNameProperty());
         
         // Clear person details.
         showPersonDetails(null);
@@ -110,6 +111,9 @@ public class PersonOverviewController {
         if (selectedIndex >= 0) {
         	
         	//PS6 - Calling the deletePerson method
+        	
+        	UUID perID = selectedPerson.getPersonID();
+        	System.out.println("Try to delete: " + perID.toString());
         	//		Figure out the value of perID
         	UUID perID = UUID.fromString("1234");
         	
@@ -139,6 +143,14 @@ public class PersonOverviewController {
         boolean okClicked = mainApp.showPersonEditDialog(tempPerson);
         if (okClicked) {
         	//PS6 - Calling the addPerson method
+        	PersonDomainModel per = new PersonDomainModel();
+        	per.setPersonID(tempPerson.getPersonID());
+        	per.setFirstName(tempPerson.getFirstName());
+        	per.setLastName(tempPerson.getLastName());
+        	per.setCity(tempPerson.getCity());
+        	per.setStreet(tempPerson.getStreet());
+        	per.setPostalCode(tempPerson.getPostalCode());
+        	per.setBirthday(tempPerson.getBirthday());
         	PersonDAL.addPerson(tempPerson);        	
             mainApp.getPersonData().add(tempPerson);
         }
@@ -156,6 +168,15 @@ public class PersonOverviewController {
             if (okClicked) {
             	
             	//PS6 - Calling the updatePerson method
+            	PersonDomainModel updatePer = new PersonDomainModel();            	
+            	updatePer.setPersonID(selectedPerson.getPersonID());
+            	updatePer.setFirstName(selectedPerson.getFirstName());
+            	updatePer.setLastName(selectedPerson.getLastName());
+            	updatePer.setCity(selectedPerson.getCity());
+            	updatePer.setStreet(selectedPerson.getStreet());
+            	updatePer.setPostalCode(selectedPerson.getPostalCode());
+            	updatePer.setBirthday(selectedPerson.getBirthday());
+            	
             	PersonDAL.updatePerson(selectedPerson);  
                 showPersonDetails(selectedPerson);
             }
